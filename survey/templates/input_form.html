@@ -1,0 +1,145 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Input Survey Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-success">Enter Land Survey Values</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label>Select Category:</label>
+            <select name="category" class="form-select">
+                {% for item in dropdowns %}
+                    <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Enter Value:</label>
+            <input type="text" name="value" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-warning">Add</button>
+        <a href="/summary" class="btn btn-success">View Summary</a>
+    </form>
+    <hr>
+    <h3>Previous Entries:</h3>
+    <ul>
+        {% for val in values %}
+            <li>{{ val.category }} → {{ val.value }}</li>
+        {% endfor %}
+    </ul>
+</body>
+</html> -->
+
+
+
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Input Survey Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body class="container mt-5"><h2 class="text-success">Enter Land Survey Values</h2>
+
+<form method="POST">
+
+    {% csrf_token %}
+
+    <div class="mb-3">
+
+        <label>Select Category:</label>
+
+        <select name="category" class="form-select">
+
+            {% for item in dropdowns %}
+
+                <option value="{{ item }}">{{ item }}</option>
+
+            {% endfor %}
+
+        </select>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label>Enter Value:</label>
+
+        <input type="text" name="value" class="form-control" required>
+
+    </div>
+
+    <button type="submit" class="btn btn-warning">Add</button>
+
+    <a href="/summary" class="btn btn-success">View Summary</a>
+
+</form>
+
+<hr>
+
+<h3>Previous Entries:</h3>
+
+<ul>
+
+    {% for val in values %}
+
+        <li>{{ val.category }} → {{ val.value }}</li>
+
+    {% endfor %}
+
+</ul>
+
+</body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Input Survey Data</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="container mt-5">
+    <h2 class="text-success">Enter Land Survey Values</h2>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="category">Select Category:</label>
+            <select name="category" id="category" class="form-select">
+                {% for item in dropdowns %}
+                    <option value="{{ item }}">{{ item }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="value">Enter Value:</label>
+            <input type="number" name="value" id="value" class="form-control" step="0.01" required>
+        </div>
+        <button type="submit" class="btn btn-warning">Add</button>
+        <a href="{% url 'summary' %}" class="btn btn-success">View Summary</a>
+    </form>
+
+    <hr>
+
+    <h3>Current Session Data:</h3>
+    <div class="mb-3">
+        <strong>State:</strong> {{ request.session.state }}<br>
+        <strong>Segment ID:</strong> {{ request.session.segment_id }}<br>
+        <strong>Route ID:</strong> {{ request.session.route_id }}
+    </div>
+
+    <h3>Previous Entries:</h3>
+    <ul class="list-group">
+        {% for val in values %}
+            <li class="list-group-item">{{ val.category }} → {{ val.value }} ({{ val.timestamp|date:"Y-m-d H:i" }})</li>
+        {% endfor %}
+    </ul>
+
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
