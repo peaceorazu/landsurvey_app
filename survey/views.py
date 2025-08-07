@@ -1,6 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .models import SurveyEntry
+from io import BytesIO
 from django.db.models import Sum
+from reportlab.pdfgen import canvas
+from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.platypus import Table, TableStyle
 
 DROPDOWNS = [
     'Trenching S1 Normal soil (1.2m)', 'Trenching S2 Hard soil (1m)',
@@ -14,6 +20,8 @@ DROPDOWNS = [
 
 def landing_page(request):
     return render(request, 'landing.html')
+
+
 
 def index(request):
     if request.method == 'POST':
@@ -35,7 +43,7 @@ def input_form(request):
                 segment_id=request.session['segment_id'],
                 route_id=request.session['route_id'],
                 category=request.POST.get('category'),
-                value=float(request.POST.get('value'))
+                value=float(request.POST.get('value')),
             )
         except (ValueError, TypeError):
             # Handle invalid number input
@@ -50,6 +58,48 @@ def input_form(request):
         'dropdowns': DROPDOWNS,
         'values': values
     })
+
+def export_pdf(request):
+    entries = SurveyEntry.objects.filter(
+        segment_id=request.session.get('segment_id', '')
+    ).order_by('-timestamp')
+    
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    
+    # Header
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(100, 750, "Survey Report")
+    
+    # Table Data
+    data = [["Category", "Value", "Timestamp"]]
+    for entry in entries:
+        data.append([
+            entry.category,
+            str(entry.value),
+            entry.timestamp.strftime("%Y-%m-%d %H:%M")
+        ])
+    
+    # Create table
+    table = Table(data)
+    table.setStyle(TableStyle([
+        ('BACKGROUND', (0,0), (-1,0), colors.HexColor('#2e7d32')),
+        ('TEXTCOLOR', (0,0), (-1,0), colors.white),
+        ('ALIGN', (0,0), (-1,-1), 'LEFT'),
+        ('FONTNAME', (0,0), (-1,0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0,0), (-1,0), 12),
+        ('BOTTOMPADDING', (0,0), (-1,0), 12),
+        ('BACKGROUND', (0,1), (-1,-1), colors.beige),
+        ('GRID', (0,0), (-1,-1), 1, colors.black)
+    ]))
+    
+    table.wrapOn(p, 400, 600)
+    table.drawOn(p, 100, 600)
+    p.showPage()
+    p.save()
+    
+    buffer.seek(0)
+    return HttpResponse(buffer, content_type='application/pdf')
 
 def summary(request):
     if 'segment_id' not in request.session:

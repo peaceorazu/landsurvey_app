@@ -137,6 +137,9 @@
             <li class="list-group-item">{{ val.category }} → {{ val.value }} ({{ val.timestamp|date:"Y-m-d H:i" }})</li>
         {% endfor %}
     </ul>
+    <a href="{% url 'export_pdf' %}" class="btn btn-danger mt-3">
+        Export to PDF
+    </a>
 
     
 

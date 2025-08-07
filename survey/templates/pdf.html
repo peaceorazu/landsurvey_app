@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Survey Report - {{ request.session.segment_id }}</title>
+    <style>
+        @page { size: A4; margin: 1cm; }
+        body { font-family: Arial; }
+        h1 { color: #2e7d32; }
+        .header { margin-bottom: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #2e7d32; color: white; }
+        tr:nth-child(even) { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Land Survey Report</h1>
+        <p><strong>State:</strong> {{ request.session.state }}</p>
+        <p><strong>Segment ID:</strong> {{ request.session.segment_id }}</p>
+        <p><strong>Route ID:</strong> {{ request.session.route_id }}</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Value</th>
+                <th>Date Recorded</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in object_list %}
+            <tr>
+                <td>{{ entry.category }}</td>
+                <td>{{ entry.value }}</td>
+                <td>{{ entry.timestamp|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>
