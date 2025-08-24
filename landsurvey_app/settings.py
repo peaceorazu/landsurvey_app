@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-cw$^e@7jf-#7^8lr4m7_8$qiq&w+(v-1$b!jx)n25vsqrux*3x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['landsurvey-app.onrender.com']
+ALLOWED_HOSTS = ['landsurvey-app-p.onrender.com']
 
 # Application definition
 
